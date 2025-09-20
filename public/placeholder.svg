@@ -1,0 +1,10 @@
+<svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0.5" y="0.5" width="199" height="119" rx="10" fill="#E6EDFF" stroke="#B3C6F7"/>
+  <path d="M20 85 L60 45 L95 75 L130 40 L180 85" stroke="#3B5FFF" stroke-width="3" fill="none"/>
+  <circle cx="60" cy="45" r="5" fill="#2D3A8C"/>
+  <circle cx="130" cy="40" r="5" fill="#2D3A8C"/>
+  <circle cx="95" cy="75" r="5" fill="#2D3A8C"/>
+  <circle cx="180" cy="85" r="5" fill="#2D3A8C"/>
+  <text x="16" y="24" fill="#2D3A8C" font-family="Arial, sans-serif" font-size="14">Route preview</text>
+</svg>
+
