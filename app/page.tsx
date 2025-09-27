@@ -58,6 +58,26 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#F3F9FD] flex flex-col">
       {/* Hero Section with Background */}
       <div className="bg-[#F3F9FD]">
+      {/* Top Contact Bar */}
+      <div className="bg-[#4043FF] text-white text-sm py-2">
+        <div className="max-w-7xl mx-auto px-4 md:px-12 flex items-center justify-center">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+              <span>info@alcott.com.ng</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+              </svg>
+              <span>+234 906 000 7571</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Header */}
       <header className="w-full flex items-center justify-between px-4 md:px-12 py-4 md:py-6 bg-[#F3F9FD]">
         {/* Logo */}
@@ -74,12 +94,18 @@ export default function HomePage() {
           <a href="#" className="text-gray-700 hover:text-[#4043FF] transition-colors">Home</a>
           <a href="#" className="text-gray-700 hover:text-[#4043FF] transition-colors">Ship</a>
           <a href="#" className="text-gray-700 hover:text-[#4043FF] transition-colors">Track</a>
+          <a href="#" className="text-gray-700 hover:text-[#4043FF] transition-colors">Shop & Ship</a>
         </nav>
         
-          {/* Desktop Register Button - Pill Shaped */}
-          <Button className="hidden md:block bg-[#4043FF] hover:bg-[#3333CC] text-white px-8 py-3 text-base font-semibold rounded-full w-50">
-          Register
-        </Button>
+          {/* Desktop Action Buttons */}
+          <div className="hidden md:flex items-center gap-4">
+            <Button variant="outline" className="bg-transparent border-2 border-[#4043FF] text-[#4043FF] hover:bg-[#4043FF] hover:text-white px-6 py-2 text-base font-semibold rounded-full">
+              Sign In
+            </Button>
+            <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-6 py-2 text-base font-semibold rounded-full">
+              Register
+            </Button>
+          </div>
           
           {/* Mobile Menu Button */}
           <button className="md:hidden">
@@ -117,10 +143,14 @@ export default function HomePage() {
               <a href="#" className="block text-lg font-medium text-gray-700 hover:text-[#4043FF] transition-colors">Home</a>
               <a href="#" className="block text-lg font-medium text-gray-700 hover:text-[#4043FF] transition-colors">Ship</a>
               <a href="#" className="block text-lg font-medium text-gray-700 hover:text-[#4043FF] transition-colors">Track</a>
+              <a href="#" className="block text-lg font-medium text-gray-700 hover:text-[#4043FF] transition-colors">Shop & Ship</a>
             </nav>
 
             {/* Action Buttons */}
             <div className="space-y-4 mb-8">
+              <Button variant="outline" className="w-full bg-transparent border-2 border-[#4043FF] text-[#4043FF] hover:bg-[#4043FF] hover:text-white py-3 text-base font-semibold rounded-full">
+                Sign In
+              </Button>
               <Button className="w-full bg-[#4043FF] hover:bg-[#3333CC] text-white py-3 text-base font-semibold rounded-full">
                 Register
               </Button>
@@ -142,9 +172,11 @@ export default function HomePage() {
         {/* Left: Hero Text - Desktop Layout */}
         <section className="hidden lg:flex flex-1 flex-col items-start justify-center max-w-2xl lg:pr-12">
           <h1 className="text-4xl lg:text-6xl font-bold leading-tight text-gray-900 mb-6">
-            <span className="text-blue-600">Ship</span> and receive{' '}
-            <span className="text-[#4043FF]">packages</span> to and from any location{' '}
-            <span className="text-[#4043FF]">worldwide</span> from your convenience
+            <span className="text-[#4043FF]">Ship</span> and receive{' '}
+            <span className="text-black">packages</span> to and{' '}
+            from any location{' '}
+            <span className="text-[#4043FF]">worldwide</span> from your{' '}
+            convenience
             </h1>
           
           <p className="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
@@ -172,8 +204,8 @@ export default function HomePage() {
         {/* Mobile Hero Section */}
         <section className="lg:hidden px-4 py-8 text-center w-full">
           <h1 className="text-3xl font-bold leading-tight text-gray-900 mb-6">
-            <span className="text-blue-600">Ship</span> and receive<br />
-            <span className="text-[#4043FF]">packages</span> to and<br />
+            <span className="text-[#4043FF]">Ship</span> and receive<br />
+            <span className="text-black">packages</span> to and<br />
             from any<br />
             location<br />
             <span className="text-[#4043FF]">worldwide</span> from<br />
@@ -204,23 +236,77 @@ export default function HomePage() {
         </section>
 
         {/* Right: Phone Mockup - Desktop Layout */}
-        <section className="hidden lg:flex flex-1 items-center justify-center relative w-full h-[600px]">
+        <section className="hidden lg:flex flex-1 flex-col items-center justify-center relative w-full h-[600px]">
           {/* Mobile Landing Image */}
           <img
             src="/mobile-landing-hero.png"
             alt="Mobile app mockup"
-            className="w-[400px] h-auto transform rotate-12"
+            className="w-[400px] h-auto transform rotate-12 mb-8"
           />
+          
+          {/* Download App Section */}
+          <div className="flex flex-col items-center text-center">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
+              Download our mobile app
+              <svg className="w-6 h-6 text-yellow-500" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+              </svg>
+            </h3>
+            <p className="text-gray-600 text-sm mb-6 max-w-xs">
+              Download our mobile app and enjoy seamless shipping
+            </p>
+            <div className="flex space-x-4">
+              <div className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-lg flex items-center space-x-2 cursor-pointer transition-colors duration-200">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                <span className="font-medium">App Store</span>
+              </div>
+              <div className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-lg flex items-center space-x-2 cursor-pointer transition-colors duration-200">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                <span className="font-medium">Google Play</span>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Mobile Phone Mockup Section */}
-        <section className="lg:hidden flex-1 flex items-center justify-center relative w-full h-[600px] px-4">
+        <section className="lg:hidden flex-1 flex flex-col items-center justify-center relative w-full px-4 space-y-8">
           {/* Mobile Landing Image */}
           <img
             src="/mobile-landing-hero.png"
             alt="Mobile app mockup"
             className="w-[300px] h-auto"
           />
+          
+          {/* Download App Section - Mobile */}
+          <div className="flex flex-col items-center text-center">
+            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
+              Download our mobile app
+              <svg className="w-5 h-5 text-yellow-500" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+              </svg>
+            </h3>
+            <p className="text-gray-600 text-sm mb-6 max-w-xs">
+              Download our mobile app and enjoy seamless shipping
+            </p>
+            <div className="flex space-x-4">
+              <div className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center space-x-2 cursor-pointer transition-colors duration-200">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                <span className="font-medium text-sm">App Store</span>
+              </div>
+              <div className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center space-x-2 cursor-pointer transition-colors duration-200">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                <span className="font-medium text-sm">Google Play</span>
+              </div>
+            </div>
+          </div>
         </section>
       </main>
     </div>
@@ -356,71 +442,92 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Business Efficiency Section */}
-      <section className="bg-[#F3F9FD] py-20">
+      {/* Why Use Alcott Section */}
+      <section className="bg-gray-50 py-20">
         <div className="max-w-7xl mx-auto px-4 lg:px-12">
           {/* Header */}
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Running a <span className="text-[#4043FF]">business</span> has so many moving parts, lets make your logistics more efficient.
+              Why Use Alcott?
             </h2>
-            <p className="text-lg text-gray-600 max-w-4xl mx-auto leading-relaxed">
-              Whether you are an individual, farmer, FMCG or manufacturing company, Alcott will complement your supply chain process by providing movement and storage of your goods as well as providing valuable insights on tracking.
-            </p>
           </div>
 
           {/* Main Content */}
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            {/* Left: Features */}
-            <div className="flex-1 space-y-8">
+          <div className="flex flex-col lg:flex-row items-start gap-16">
+            {/* Left: Features List */}
+            <div className="flex-1 space-y-6">
               {/* Easy to use */}
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <div className="flex items-start space-x-6">
-                  <div className="w-16 h-16 bg-[#E0E0FF] rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg className="w-8 h-8 text-[#6A5ACD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Easy to use</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Navigate through the haul247 app easily as a client or partner to book warehouses & trucks alongside many more things.
-                    </p>
-                  </div>
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-[#E0E0FF] rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-[#4043FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Easy to use</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Navigate through the haul247 app easily as a client or partner to book warehouses & trucks alongside many more things.
+                  </p>
                 </div>
               </div>
 
               {/* Super fast */}
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <div className="flex items-start space-x-6">
-                  <div className="w-16 h-16 bg-[#E0E0FF] rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg className="w-8 h-8 text-[#6A5ACD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Super fast</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Across our platforms all logistics processes are blazing fast because of our efficient partners and digital servers that anchors our work.
-                    </p>
-                  </div>
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-[#E0E0FF] rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-[#4043FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Super fast</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Across our platforms all logistics processes are blazing fast because of our efficient partners and digital servers that anchors our work.
+                  </p>
                 </div>
               </div>
 
-              {/* Safe & secure */}
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <div className="flex items-start space-x-6">
-                  <div className="w-16 h-16 bg-[#E0E0FF] rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg className="w-8 h-8 text-[#6A5ACD]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Safe & secure</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Many desktop publishing packages and web page editors now use for them.
-                    </p>
-                  </div>
+              {/* Safe & secure - First */}
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-[#E0E0FF] rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-[#4043FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Safe & secure</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Safe and secure deliveries and payment solution
+                  </p>
+                </div>
+              </div>
+
+              {/* Safe & secure - Second */}
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-[#E0E0FF] rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-[#4043FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Safe & secure</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Safe and secure deliveries and payment solution
+                  </p>
+                </div>
+              </div>
+
+              {/* Safe & secure - Third */}
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-[#E0E0FF] rounded-full flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-[#4043FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Safe & secure</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Safe and secure deliveries and payment solution
+                  </p>
                 </div>
               </div>
             </div>
@@ -428,20 +535,14 @@ export default function HomePage() {
             {/* Right: Dashboard Screenshot */}
             <div className="flex-1 flex justify-center">
               <div className="relative">
-                {/* Device Frame */}
-                <div className="bg-gray-800 rounded-3xl p-4 shadow-2xl">
-                  <div className="bg-white rounded-2xl overflow-hidden">
-                    <img
-                      src="/right-section-3.png"
-                      alt="Dashboard screenshot"
-                      // className="w-full h-auto max-w-lg"
-                    />
-                  </div>
+                {/* Dashboard Image with border */}
+                <div className="bg-white rounded-2xl p-2 shadow-2xl border-4 border-gray-200">
+                  <img
+                    src="/right-section-3.png"
+                    alt="Dashboard screenshot"
+                    className="w-full h-auto rounded-xl"
+                  />
                 </div>
-                
-                {/* Decorative Elements */}
-                <div className="absolute -top-4 -right-4 w-8 h-8 bg-[#6A5ACD] rounded-full opacity-20"></div>
-                <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-[#4043FF] rounded-full opacity-30"></div>
               </div>
             </div>
           </div>
