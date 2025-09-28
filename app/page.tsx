@@ -99,10 +99,10 @@ export default function HomePage() {
         
           {/* Desktop Action Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="outline" className="bg-transparent border-2 border-[#4043FF] text-[#4043FF] hover:bg-[#4043FF] hover:text-white px-6 py-2 text-base font-semibold rounded-full">
+            <Button variant="outline" className="bg-transparent border-2 border-[#4043FF] text-[#4043FF] hover:bg-[#4043FF] hover:text-white px-6 py-2 text-base font-semibold rounded-full" onClick={() => window.location.href = '/auth/lets-get-you-in'}>
               Sign In
             </Button>
-            <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-6 py-2 text-base font-semibold rounded-full">
+            <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-6 py-2 text-base font-semibold rounded-full" onClick={() => window.location.href = '/auth/lets-get-you-in'}>
               Register
             </Button>
           </div>
@@ -148,13 +148,13 @@ export default function HomePage() {
 
             {/* Action Buttons */}
             <div className="space-y-4 mb-8">
-              <Button variant="outline" className="w-full bg-transparent border-2 border-[#4043FF] text-[#4043FF] hover:bg-[#4043FF] hover:text-white py-3 text-base font-semibold rounded-full">
+              <Button variant="outline" className="w-full bg-transparent border-2 border-[#4043FF] text-[#4043FF] hover:bg-[#4043FF] hover:text-white py-3 text-base font-semibold rounded-full" onClick={() => window.location.href = '/auth/lets-get-you-in'}>
                 Sign In
               </Button>
-              <Button className="w-full bg-[#4043FF] hover:bg-[#3333CC] text-white py-3 text-base font-semibold rounded-full">
+              <Button className="w-full bg-[#4043FF] hover:bg-[#3333CC] text-white py-3 text-base font-semibold rounded-full" onClick={() => window.location.href = '/auth/lets-get-you-in'}>
                 Register
               </Button>
-              <Button className="w-full bg-[#4043FF] hover:bg-[#3333CC] text-white py-3 text-base font-semibold rounded-full">
+              <Button className="w-full bg-[#4043FF] hover:bg-[#3333CC] text-white py-3 text-base font-semibold rounded-full" onClick={() => alert('Request a delivery functionality coming soon!')}>
                 Request a delivery
               </Button>
             </div>
@@ -191,12 +191,12 @@ export default function HomePage() {
                 className="w-full h-12 bg-white border-2 border-gray-200 px-6 text-base text-gray-900 placeholder:text-gray-500 rounded-l-full rounded-r-none focus:ring-2 focus:ring-[#4043FF] focus:border-transparent border-r-0"
               />
             </div>
-            <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-8 py-3 text-base font-semibold rounded-r-full rounded-l-none h-12 border-2 border-[#4043FF] border-l-0">
+            <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-8 py-3 text-base font-semibold rounded-r-full rounded-l-none h-12 border-2 border-[#4043FF] border-l-0" onClick={() => alert('Track functionality coming soon!')}>
               Track
             </Button>
           </div>
           
-          <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-8 py-3 text-base font-semibold rounded-full w-full max-w-lg h-12">
+          <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-8 py-3 text-base font-semibold rounded-full w-full max-w-lg h-12" onClick={() => alert('Request a delivery functionality coming soon!')}>
             Request a delivery
           </Button>
         </section>
@@ -225,12 +225,12 @@ export default function HomePage() {
                 className="w-full h-12 bg-white border-2 border-gray-200 px-4 text-base text-gray-900 placeholder:text-gray-500 rounded-l-full rounded-r-none focus:ring-2 focus:ring-[#4043FF] focus:border-transparent border-r-0"
               />
             </div>
-            <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-6 py-3 text-base font-semibold rounded-r-full rounded-l-none h-12 border-2 border-[#4043FF] border-l-0">
+            <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-6 py-3 text-base font-semibold rounded-r-full rounded-l-none h-12 border-2 border-[#4043FF] border-l-0" onClick={() => alert('Track functionality coming soon!')}>
               Track
             </Button>
           </div>
           
-          <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-6 py-3 text-base font-semibold rounded-full w-full max-w-sm h-12">
+          <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-6 py-3 text-base font-semibold rounded-full w-full max-w-sm h-12" onClick={() => alert('Request a delivery functionality coming soon!')}>
             Request a delivery
           </Button>
         </section>
@@ -385,7 +385,7 @@ export default function HomePage() {
                 </div>
                 
                 {/* Check Button */}
-                <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-8 py-3 text-base font-semibold rounded-full w-full max-w-lg h-12">
+                <Button className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-8 py-3 text-base font-semibold rounded-full w-full max-w-lg h-12" onClick={() => alert('Check rates functionality coming soon!')}>
             Check
           </Button>
               </div>
