@@ -1,139 +1,59 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { SuccessModal } from '@/components/ui/success-modal'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-export default function TransactionHistoryPage() {
+export default function TopUpPage() {
   const [selectedCurrency, setSelectedCurrency] = useState('NGN')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [transactions, setTransactions] = useState<any[]>([])
-  const [loading, setLoading] = useState(false)
-  const [hasMore, setHasMore] = useState(true)
+  const [currentStep, setCurrentStep] = useState(1) // 1: Amount, 2: Payment Method, 3: Success
+  const [selectedAmount, setSelectedAmount] = useState('247,000')
+  const [customAmount, setCustomAmount] = useState('')
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('')
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const router = useRouter()
 
-  // Base transaction templates to generate endless data
-  const transactionTemplates = [
-    {
-      title: 'New Order Made!',
-      description: 'You have created a new shipping order',
-      type: 'order'
-    },
-    {
-      title: 'Top Up Successful',
-      description: 'You successfully top up your e-wallet for ₦600,000',
-      type: 'topup'
-    },
-    {
-      title: 'Payment Successful',
-      description: 'Shipping payment of ₦40,000 successfully made',
-      type: 'payment'
-    },
-    {
-      title: 'Top Up Successful',
-      description: 'You successfully top up your e-wallet for ₦65,000',
-      type: 'topup'
-    },
-    {
-      title: 'Payment Successful',
-      description: 'Shipping payment of ₦45,000 successfully made',
-      type: 'payment'
-    },
-    {
-      title: 'New Order Made!',
-      description: 'You have created a new shipping order',
-      type: 'order'
-    },
-    {
-      title: 'E-Wallet Connected!',
-      description: 'You have connected the e-wallet with Saska',
-      type: 'wallet'
-    },
-    {
-      title: 'Top Up Successful',
-      description: 'You successfully top up your e-wallet for ₦65,000',
-      type: 'topup'
-    },
-    {
-      title: 'E-Wallet Connected!',
-      description: 'You have connected the e-wallet with Saska',
-      type: 'wallet'
-    }
+  const predefinedAmounts = [
+    '10k', '20k', '50k',
+    '100k', '200k', '250k',
+    '500k', '750k', '1m'
   ]
 
-  const timeOptions = ['2 hours ago', '4 hours ago', '1 day ago', '2 days ago', '4 days ago', '5 days ago', '12 days ago']
+  const handleAmountSelect = (amount: string) => {
+    setSelectedAmount(amount)
+    setCustomAmount(formatAmount(amount))
+  }
 
-  // Generate transactions with endless data
-  const generateTransactions = useCallback((startIndex: number, count: number) => {
-    const newTransactions = []
-    for (let i = 0; i < count; i++) {
-      const templateIndex = (startIndex + i) % transactionTemplates.length
-      const template = transactionTemplates[templateIndex]
-      const timeIndex = (startIndex + i) % timeOptions.length
-      
-      newTransactions.push({
-        id: startIndex + i + 1,
-        title: template.title,
-        description: template.description,
-        time: timeOptions[timeIndex],
-        type: template.type
-      })
+  const handleCustomAmountChange = (value: string) => {
+    setCustomAmount(value)
+    // Clear selected preset amount when typing custom amount
+    setSelectedAmount('')
+  }
+
+  const handleContinueFromAmount = () => {
+    setCurrentStep(2)
+  }
+
+  const handleContinueFromPayment = () => {
+    setCurrentStep(3)
+    setShowSuccessModal(true)
+  }
+
+  const handleSuccessClose = () => {
+    setShowSuccessModal(false)
+    router.push('/home')
+  }
+
+  const formatAmount = (amount: string) => {
+    if (amount === '1m') return '₦1,000,000'
+    if (amount.includes('k')) {
+      const num = amount.replace('k', '')
+      return `₦${num},000`
     }
-    return newTransactions
-  }, [transactionTemplates, timeOptions])
-
-  // Load initial transactions
-  useEffect(() => {
-    const initialTransactions = generateTransactions(0, 20)
-    setTransactions(initialTransactions)
-  }, [generateTransactions])
-
-  // Load more transactions
-  const loadMoreTransactions = useCallback(() => {
-    if (loading || !hasMore) return
-    
-    setLoading(true)
-    
-    // Simulate API delay
-    setTimeout(() => {
-      const newTransactions = generateTransactions(transactions.length, 20)
-      setTransactions(prev => [...prev, ...newTransactions])
-      setLoading(false)
-      
-      // Stop loading after 200 transactions for demo purposes
-      if (transactions.length >= 180) {
-        setHasMore(false)
-      }
-    }, 500)
-  }, [loading, hasMore, transactions.length, generateTransactions])
-
-  // Infinite scroll handler
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight || loading) {
-        return
-      }
-      loadMoreTransactions()
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [loadMoreTransactions, loading])
-
-  const getTransactionColor = (type: string) => {
-    switch (type) {
-      case 'order':
-        return 'bg-blue-100 text-blue-600'
-      case 'topup':
-        return 'bg-green-100 text-green-600'
-      case 'payment':
-        return 'bg-purple-100 text-purple-600'
-      case 'wallet':
-        return 'bg-orange-100 text-orange-600'
-      default:
-        return 'bg-gray-100 text-gray-600'
-    }
+    return `₦${amount}`
   }
 
   return (
@@ -281,7 +201,13 @@ export default function TransactionHistoryPage() {
             {/* Back Button and Title */}
             <div className="flex items-center gap-4">
               <button 
-                onClick={() => router.back()}
+                onClick={() => {
+                  if (currentStep > 1) {
+                    setCurrentStep(currentStep - 1)
+                  } else {
+                    router.back()
+                  }
+                }}
                 className="p-2 rounded-lg hover:bg-gray-100"
               >
                 <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,7 +215,7 @@ export default function TransactionHistoryPage() {
                 </svg>
               </button>
               <h1 className="text-xl font-bold text-gray-900 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
-                Transaction History
+                Top Up Wallet
               </h1>
             </div>
 
@@ -349,67 +275,141 @@ export default function TransactionHistoryPage() {
           </div>
         </header>
 
-        {/* Transaction History Content */}
+        {/* Top Up Content */}
         <main className="flex-1 p-4 lg:p-6 pb-20 lg:pb-6">
-          <div className="max-w-4xl mx-auto">
-            {/* Transaction List */}
-            <div className="space-y-0">
-              {transactions.map((transaction, index) => (
-                <div key={transaction.id} className="bg-white border-b border-gray-100 p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${getTransactionColor(transaction.type)} flex-shrink-0`}>
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        {transaction.type === 'order' && (
-                          <path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5a1 1 0 0 0-1 1v11a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a1 1 0 0 0-1-1zM10 6a2 2 0 0 1 4 0v1h-4V6zm8 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9h2v1a1 1 0 0 0 2 0V9h4v1a1 1 0 0 0 2 0V9h2v10z"/>
-                        )}
-                        {transaction.type === 'topup' && (
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        )}
-                        {transaction.type === 'payment' && (
-                          <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
-                        )}
-                        {transaction.type === 'wallet' && (
-                          <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-                        )}
-                      </svg>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-base font-semibold text-gray-900 font-[Urbanist] mb-1" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
-                        {transaction.title}
-                      </p>
-                      <p className="text-sm text-gray-500 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
-                        {transaction.description}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="text-sm text-[#4043FF] font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif', color: '#4043FF' }}>
-                      {transaction.time}
-                    </span>
-                    <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
+          <div className="max-w-2xl mx-auto">
+            {/* Step 1: Amount Selection */}
+            {currentStep === 1 && (
+              <div className="space-y-8">
+                <div className="text-center">
+                  <p className="text-gray-600 mb-6 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
+                    Enter the amount of top up
+                  </p>
+                  
+                  {/* Custom Amount Input */}
+                  <div className="mb-8">
+                    <input
+                      type="text"
+                      value={customAmount || ''}
+                      onChange={(e) => handleCustomAmountChange(e.target.value)}
+                      placeholder="₦247,000"
+                      className="w-full max-w-md mx-auto text-center text-2xl font-bold text-[#4043FF] bg-transparent border-2 border-gray-200 rounded-xl px-6 py-4 focus:ring-2 focus:ring-[#4043FF] focus:border-transparent font-[Urbanist] placeholder:text-[#4043FF]"
+                      style={{ fontFamily: 'Urbanist, system-ui, sans-serif', color: '#4043FF' }}
+                    />
                   </div>
                 </div>
-              ))}
-              
-              {/* Loading indicator */}
-              {loading && (
-                <div className="flex justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4043FF]"></div>
+
+                {/* Predefined Amount Buttons */}
+                <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto">
+                  {predefinedAmounts.map((amount) => (
+                    <button
+                      key={amount}
+                      onClick={() => handleAmountSelect(amount)}
+                      className={`px-6 py-3 rounded-full border-2 font-semibold transition-colors font-[Urbanist] ${
+                        selectedAmount === amount
+                          ? 'border-[#4043FF] bg-[#4043FF] text-white'
+                          : 'border-[#4043FF] text-[#4043FF] hover:bg-[#4043FF] hover:text-white'
+                      }`}
+                      style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}
+                    >
+                      ₦{amount}
+                    </button>
+                  ))}
                 </div>
-              )}
-              
-              {/* End of list indicator */}
-              {!hasMore && transactions.length > 0 && (
-                <div className="text-center py-8">
-                  <p className="text-gray-500 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
-                    You've reached the end of your transaction history
+
+                {/* Continue Button */}
+                <div className="flex justify-center">
+                  <Button 
+                    onClick={handleContinueFromAmount}
+                    className="bg-[#4043FF] hover:bg-[#3333CC] text-white px-12 py-3 rounded-full font-[Urbanist] w-full max-w-md"
+                    style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Payment Method Selection */}
+            {currentStep === 2 && (
+              <div className="space-y-8">
+                <div className="text-center">
+                  <p className="text-gray-400 text-sm mb-2 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
+                    Auto Layout Vertical
+                  </p>
+                  <p className="text-gray-600 mb-8 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
+                    Select the top up method you want to use
                   </p>
                 </div>
-              )}
-            </div>
+
+                {/* Payment Method Card */}
+                <div className="max-w-md mx-auto">
+                  <div 
+                    onClick={() => setSelectedPaymentMethod('card')}
+                    className={`border-2 rounded-xl p-6 cursor-pointer transition-colors ${
+                      selectedPaymentMethod === 'card' 
+                        ? 'border-[#4043FF] bg-blue-50' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        {/* Card Icon */}
+                        <div className="w-12 h-8 bg-red-500 rounded flex items-center justify-center">
+                          <span className="text-white text-xs font-bold">CARD</span>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
+                            •••• •••• •••• 4679
+                          </p>
+                        </div>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                        selectedPaymentMethod === 'card' 
+                          ? 'border-[#4043FF] bg-[#4043FF]' 
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedPaymentMethod === 'card' && (
+                          <div className="w-2 h-2 bg-white rounded-full"></div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="space-y-4 max-w-md mx-auto">
+                  <Button 
+                    variant="outline"
+                    className="w-full border-2 border-[#E0E0FF] text-[#4043FF] bg-[#E0E0FF] hover:bg-[#D0D0FF] py-3 rounded-full font-[Urbanist]"
+                    style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}
+                  >
+                    Add New Card
+                  </Button>
+                  
+                  <Button 
+                    onClick={handleContinueFromPayment}
+                    disabled={!selectedPaymentMethod}
+                    className="w-full bg-[#4043FF] hover:bg-[#3333CC] text-white py-3 rounded-full font-[Urbanist] disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </main>
       </div>
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={handleSuccessClose}
+        title="Top Up Successful!"
+        message="The balance will be added to your wallet"
+        buttonText="OK"
+      />
 
       {/* Mobile Bottom Navigation */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 safe-area-pb">

@@ -2,24 +2,24 @@ import { TestimonialCard } from './testimonial-card'
 
 const testimonials = [
   {
-    name: "Jenny Wilson",
-    title: "Project Manager",
+    name: "Sola Osinioki",
+    title: "Senior Business Executive",
     company: "Microsoft",
-    quote: "I just simply love tools that make my life easier! I have everything that I need in one place, and that allows our team to be more organized and user-oriented.",
+    quote: "Alcott is very efficient, sent a package from London, UK to a suburb in Makurdi, Nigeria. the process was smooth and the recipient got the package in good condition",
     avatar: "/testimonial-1.png"
   },
   {
-    name: "Robert Fox",
-    title: "Founder",
+    name: "Ganiu Ayanteju",
+    title: "Founder at G’miec Intl.",
     company: "Brain.co",
-    quote: "I really like that I can have all in one place: I can send emails and text messages, I can have live chat, show pop-ups and push notifications on my website and create dynamic page content",
+    quote: "Alcott is very fast and reliable. We started using the company during the covid-19 pandemic lock down and to my surprise, they were still able to deliver in 3-5 working days as promised which really helped my business",
     avatar: "/testimonial-2.png"
   },
   {
-    name: "Kristin Watson",
-    title: "UX Designer",
+    name: "Ruth Abada",
+    title: "Founder at Ruth Hair and Scents",
     company: "Google",
-    quote: "Very easy to use and set up is simple. I can easily provide live support to my website visitors in real-time. It also provides many integrations.",
+    quote: "Very reliable and efficient delivery service, Our customers always come back to patronize us just because of the smooth deliveries. I would always recommend them anytime, anyday",
     avatar: "/testimonial-3.png"
   }
 ]

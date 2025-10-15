@@ -12,8 +12,7 @@ export default function HomePage() {
 
   const handleTopUp = () => {
     console.log('Top Up clicked')
-    // Add top-up functionality here
-    alert('Top Up functionality coming soon!')
+    router.push('/topup')
   }
 
   const handleQuickAction = (action: string) => {

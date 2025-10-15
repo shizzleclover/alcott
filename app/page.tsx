@@ -244,7 +244,7 @@ export default function HomePage() {
             className="w-[400px] h-auto transform rotate-12 mb-8"
           />
           
-          {/* Download App Section */}
+          Download App Section
           <div className="flex flex-col items-center text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
               Download our mobile app
@@ -271,6 +271,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        
 
         {/* Mobile Phone Mockup Section */}
         <section className="lg:hidden flex-1 flex flex-col items-center justify-center relative w-full px-4 space-y-8">
