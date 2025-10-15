@@ -37,7 +37,8 @@ export default function HomePage() {
   }, [])
 
   const handleSearchFocus = () => {
-    setIsSearchFocused(true)
+    // Navigate to search page when search input is focused
+    router.push('/search')
   }
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +48,8 @@ export default function HomePage() {
   const handleRecentSearchClick = (search: string) => {
     setSearchValue(search)
     setIsSearchFocused(false)
-    // You can add search logic here
-    console.log('Searching for:', search)
+    // Navigate to search page with the search term
+    router.push(`/search?q=${encodeURIComponent(search)}`)
   }
 
   const handleClearAllRecents = () => {
