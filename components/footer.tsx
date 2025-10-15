@@ -1,41 +1,7 @@
 export function Footer() {
   return (
     <footer className="bg-white">
-      {/* Mobile App Download Section */}
-      <section className="bg-[#F3F9FD] py-16">
-        <div className="max-w-4xl mx-auto px-4 lg:px-12 text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Download our mobile app
-            <span className="text-yellow-500 ml-2"></span>
-          </h2>
-          <p className="text-lg text-gray-700 mb-12 max-w-2xl mx-auto leading-relaxed">
-            With lots of unique blocks, you can easily build a page without coding. Build your next landing page.
-          </p>
-          
-          {/* App Download Buttons */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-full flex items-center justify-center space-x-4 transition-colors">
-              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-              </svg>
-              <div className="text-left">
-                <div className="text-xs font-medium">DOWNLOAD ON THE</div>
-                <div className="text-lg font-bold">App Store</div>
-              </div>
-            </button>
-            
-            <button className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-full flex items-center justify-center space-x-4 transition-colors">
-              <svg className="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3.609 1.814L13.792 12L3.609 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-3.198l2.807 1.626a1 1 0 010 1.73l-2.808 1.626L13.792 12l4.906-4.491zM5.864 2.658L16.802 8.99l-8.635 8.636-2.303-2.302 8.635-8.635z"/>
-              </svg>
-              <div className="text-left">
-                <div className="text-xs font-medium">GET IT ON</div>
-                <div className="text-lg font-bold">Google Play</div>
-              </div>
-            </button>
-          </div>
-        </div>
-      </section>
+      {/*  */}
 
       {/* Main Footer Content */}
       <section className="py-16">
@@ -46,7 +12,7 @@ export function Footer() {
               <div className="flex items-center mb-6">
                 <img src="/alcott-small.png" alt="alcott-small-logo"/>
               </div>
-              <p className="text-gray-600 leading-relaxed max-w-md">
+              <p className="text-gray-600 leading-relaxed max-w-md font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
                 Alcott, an end-to-end logistics tech API
                  platform that connects businesses to haulage and warehousing assets all in one ecosystem.
               </p>
@@ -54,39 +20,39 @@ export function Footer() {
 
             {/* Column 2: Company Links */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-6">Company</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-6 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Company</h3>
               <ul className="space-y-4">
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">About</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">Features</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">Works</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">Career</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>About</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Features</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Works</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Career</a></li>
               </ul>
             </div>
 
             {/* Column 3: Services Links */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-6">Services</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-6 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Services</h3>
               <ul className="space-y-4">
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">For Business</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">For Partners</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>For Business</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>For Partners</a></li>
               </ul>
             </div>
 
             {/* Column 4: Help Links */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-6">Help</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-6 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Help</h3>
               <ul className="space-y-4">
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">Customer Support</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">Delivery Details</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">Terms & Conditions</a></li>
-                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Customer Support</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Delivery Details</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Terms & Conditions</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Privacy Policy</a></li>
               </ul>
             </div>
 
             {/* Column 5: Contact Information */}
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-6">Contact Information</h3>
-              <div className="space-y-4 text-gray-600">
+              <h3 className="text-lg font-bold text-gray-900 mb-6 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Contact Information</h3>
+              <div className="space-y-4 text-gray-600 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
                 <div>+234 906 000 7571</div>
                 <div>hello@alcott.com.ng</div>
                 <div>1 Engineering Close.<br />Victoria Island 106104.<br />Lagos State</div>
@@ -126,13 +92,13 @@ export function Footer() {
 
             {/* Legal Links */}
             <div className="flex space-x-6">
-              <a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors text-sm">Privacy Policy</a>
-              <a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors text-sm">Terms & Conditions</a>
-              <a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors text-sm">Support</a>
+              <a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors text-sm font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Privacy Policy</a>
+              <a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors text-sm font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Terms & Conditions</a>
+              <a href="#" className="text-gray-600 hover:text-[#4043FF] transition-colors text-sm font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>Support</a>
             </div>
 
             {/* Copyright Notice */}
-            <div className="text-gray-600 text-sm">
+            <div className="text-gray-600 text-sm font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
               ©Copyright 2023. All Rights Reserved
             </div>
           </div>

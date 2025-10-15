@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -8,7 +8,52 @@ import { useRouter } from 'next/navigation'
 export default function HomePage() {
   const [selectedCurrency, setSelectedCurrency] = useState('NGN')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const [recentSearches, setRecentSearches] = useState([
+    '01/07/2024',
+    '02/07/2024',
+    '03/07/2024',
+    '04/07/2024',
+    '05/07/2024',
+    '06/07/2024',
+    '07/07/2024'
+  ])
+  const searchRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+
+  // Handle clicking outside search dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setIsSearchFocused(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const handleSearchFocus = () => {
+    setIsSearchFocused(true)
+  }
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+  }
+
+  const handleRecentSearchClick = (search: string) => {
+    setSearchValue(search)
+    setIsSearchFocused(false)
+    // You can add search logic here
+    console.log('Searching for:', search)
+  }
+
+  const handleClearAllRecents = () => {
+    setRecentSearches([])
+  }
 
   const handleTopUp = () => {
     console.log('Top Up clicked')
@@ -187,7 +232,7 @@ export default function HomePage() {
             </button>
 
             {/* Search */}
-            <div className="flex-1 max-w-md mx-4">
+            <div className="flex-1 max-w-md mx-4" ref={searchRef}>
               <div className="relative">
                 <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -195,9 +240,56 @@ export default function HomePage() {
                 <input
                   type="text"
                   placeholder="Type anything here to search"
+                  value={searchValue}
+                  onChange={handleSearchChange}
+                  onFocus={handleSearchFocus}
                   className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-0 rounded-lg focus:ring-2 focus:ring-[#4043FF] focus:bg-white text-gray-900 placeholder:text-gray-500 font-[Urbanist] font-bold placeholder:font-bold"
                   style={{ fontFamily: 'Urbanist, system-ui, sans-serif', fontWeight: 'bold' }}
                 />
+                
+                {/* Recent Searches Dropdown */}
+                {isSearchFocused && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+                    <div className="p-3 border-b border-gray-100">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-bold text-gray-900 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
+                          Recent
+                        </h3>
+                        <button 
+                          onClick={handleClearAllRecents}
+                          className="text-xs text-[#4043FF] font-bold hover:text-[#3333CC] font-[Urbanist]" 
+                          style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}
+                        >
+                          Clear All
+                        </button>
+                      </div>
+                    </div>
+                    <div className="py-2">
+                      {recentSearches.length > 0 ? (
+                        recentSearches.map((search, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleRecentSearchClick(search)}
+                            className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center justify-between group transition-colors"
+                          >
+                            <span className="text-sm text-gray-700 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
+                              {search}
+                            </span>
+                            <svg className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
+                        ))
+                      ) : (
+                        <div className="px-4 py-8 text-center">
+                          <p className="text-sm text-gray-500 font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
+                            No recent searches
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 

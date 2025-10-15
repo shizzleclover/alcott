@@ -19,14 +19,14 @@ export function TestimonialCard({ name, title, company, quote, avatar }: Testimo
       </div>
 
       {/* Quote */}
-      <blockquote className="text-gray-700 text-center mb-6 leading-relaxed">
+      <blockquote className="text-gray-700 text-center mb-6 leading-relaxed font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
         "{quote}"
       </blockquote>
 
       {/* Name and Title */}
       <div className="text-center">
-        <h4 className="font-bold text-gray-900 text-lg">{name}</h4>
-        <p className="text-gray-600 text-sm">
+        <h4 className="font-bold text-gray-900 text-lg font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>{name}</h4>
+        <p className="text-gray-600 text-sm font-[Urbanist]" style={{ fontFamily: 'Urbanist, system-ui, sans-serif' }}>
           {title} at {company}
         </p>
       </div>
