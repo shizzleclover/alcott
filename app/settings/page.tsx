@@ -99,7 +99,7 @@ export default function SettingsPage() {
     { 
       label: 'Logout', 
       icon: (
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
         </svg>
       ),
@@ -340,11 +340,11 @@ export default function SettingsPage() {
           </div>
 
           {/* Settings List */}
-          <div className="space-y-2">
+          <div className="space-y-8 px-40">
             {settingsItems.map((item, index) => (
-              <div key={index} className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between hover:shadow-md transition-shadow">
+              <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
+                  <div className="text-gray-600">
                     {item.icon}
                   </div>
                   <div>
