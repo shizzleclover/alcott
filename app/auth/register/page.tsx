@@ -7,8 +7,10 @@ import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import apiClient from '@/lib/api-client'
 import { toast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [emailFocused, setEmailFocused] = useState(false)
   const [passwordFocused, setPasswordFocused] = useState(false)
@@ -84,6 +86,8 @@ export default function RegisterPage() {
                     title: 'Signup successful',
                     description: message,
                   })
+                  // Route to verify email screen
+                  setTimeout(() => router.push('/auth/verify-email'), 800)
                 } catch (err: any) {
                   const apiErrorMessage =
                     err?.response?.data?.message ||
