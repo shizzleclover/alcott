@@ -1,37 +1,54 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { ChangeEvent, ComponentType, ReactNode, RefObject, SVGProps } from 'react'
+import type { ChangeEvent, ComponentType, RefObject, SVGProps } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { createShipment, type CreateShipmentRequest } from '@/lib/api/shipment-api'
+import { toast } from '@/components/ui/use-toast'
+import type {
+  ShipmentContact,
+  ShipmentOption,
+  ShipmentOptions,
+  ShipmentPaymentMethods,
+  ShipmentPaymentSelection,
+  ShipmentStepKey,
+  ShipmentSteps,
+  ShipmentPackage,
+} from '@/lib/types/shipment-types'
+import { useShipmentWizard } from '@/hooks/use-shipment-wizard'
+import { Stepper } from '@/components/shipment/Stepper'
+import { FormSection } from '@/components/shipment/FormSection'
+import { ContinueButton } from '@/components/shipment/ContinueButton'
+import { InputRow } from '@/components/shipment/InputRow'
+import { TextareaRow } from '@/components/shipment/TextareaRow'
+import { CountryCode } from '@/components/shipment/CountryCode'
 
 // Step configuration
-const steps = [
+const steps: ShipmentSteps = [
   { key: 'sender', label: 'Sender' },
   { key: 'receiver', label: 'Receiver' },
   { key: 'package', label: 'Package' },
   { key: 'payment', label: 'Payment' },
   { key: 'finish', label: 'Finish' },
-] as const
-
-type StepKey = (typeof steps)[number]['key']
-type StepDefinition = typeof steps
-
-const shippingOptions = [
-  { id: 'regular', label: 'Regular', eta: '3-4 days', price: 12000 },
-  { id: 'cargo', label: 'Cargo', eta: '3-5 days', price: 18000 },
-  { id: 'express', label: 'Express', eta: '1-2 days', price: 24000 },
 ]
 
-const paymentMethods = [
+type StepKey = ShipmentStepKey
+
+const shippingOptions: ShipmentOptions = [
+  { id: 'regular', label: 'Regular', eta: '3-4 days', price: 12000, rateId: 'shipping-rate-regular', type: 'REGULAR', currency: 'NGN' },
+  { id: 'cargo', label: 'Cargo', eta: '3-5 days', price: 18000, rateId: 'shipping-rate-cargo', type: 'CARGO', currency: 'NGN' },
+  { id: 'express', label: 'Express', eta: '1-2 days', price: 24000, rateId: 'shipping-rate-express', type: 'EXPRESS', currency: 'NGN' },
+]
+
+const paymentMethods: ShipmentPaymentMethods = [
   { id: 'wallet', label: 'My Wallet', details: 'Balance: ₦941,800.00' },
   { id: 'card', label: '•••• 4679', details: 'Visa - Expires 12/27' },
 ]
 
-const initialSender = {
+const initialContact: ShipmentContact = {
   name: '',
   phone: '',
   email: '',
@@ -39,7 +56,7 @@ const initialSender = {
   address: '',
 }
 
-const initialPackage = {
+const initialPackage: ShipmentPackage = {
   category: '',
   description: '',
   weight: '',
@@ -49,32 +66,46 @@ const initialPackage = {
   shippingOption: 'regular',
 }
 
-const initialPayment = {
+const initialPayment: ShipmentPaymentSelection = {
   method: 'wallet',
 }
 
 export default function NewShipmentPage() {
   const router = useRouter()
 
-  // Step state
-  const [currentStep, setCurrentStep] = useState<StepKey>('sender')
-  const activeIndex = useMemo(() => steps.findIndex((s) => s.key === currentStep), [currentStep])
+  const {
+    currentStep,
+    activeIndex,
+    moveToNext,
+    moveToPrevious,
+    canMoveForward,
+    sender,
+    setSender,
+    receiver,
+    setReceiver,
+    pkg,
+    setPkg,
+    payment,
+    setPayment,
+  } = useShipmentWizard({
+    steps,
+    initialSender: initialContact,
+    initialReceiver: initialContact,
+    initialPackage,
+    initialPayment,
+  })
 
-  // Form state
-  const [sender, setSender] = useState(initialSender)
-  const [receiver, setReceiver] = useState(initialSender)
-  const [pkg, setPkg] = useState(initialPackage)
-  const [payment, setPayment] = useState(initialPayment)
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // Header / navigation state
   const [selectedCurrency, setSelectedCurrency] = useState('NGN')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  // Search state (mirrors dashboard page)
   const [searchValue, setSearchValue] = useState('')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
-  const [recentSearches, setRecentSearches] = useState(['01/07/2024', '02/07/2024', '03/07/2024', '04/07/2024'])
+  const [recentSearches, setRecentSearches] = useState([
+    '01/07/2024',
+    '02/07/2024',
+    '03/07/2024',
+    '04/07/2024',
+  ])
   const searchRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -83,34 +114,121 @@ export default function NewShipmentPage() {
         setIsSearchFocused(false)
       }
     }
+
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
 
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => setSearchValue(e.target.value)
+  const handleSearchFocus = () => {
+    setIsSearchFocused(true)
+  }
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+  }
+
   const handleRecentSearchClick = (search: string) => {
     setSearchValue(search)
     setIsSearchFocused(false)
   }
-  const handleClearAllRecents = () => setRecentSearches([])
 
-  const moveToNext = () => {
-    const nextStep = steps[activeIndex + 1]
-    if (nextStep) setCurrentStep(nextStep.key)
+  const handleClearAllRecents = () => {
+    setRecentSearches([])
   }
 
-  const moveToPrevious = () => {
-    const prevStep = steps[activeIndex - 1]
-    if (prevStep) setCurrentStep(prevStep.key)
-    else router.back()
+  const handleBack = () => {
+    if (activeIndex <= 0) {
+      router.back()
+      return
+    }
+    moveToPrevious()
   }
 
-  const shippingSelection = useMemo(
+  const shippingSelection = useMemo<ShipmentOption>(
     () => shippingOptions.find((opt) => opt.id === pkg.shippingOption) || shippingOptions[0],
     [pkg.shippingOption]
   )
+
+  const handleConfirmShipment = async () => {
+    if (typeof window === 'undefined') return
+
+    const authToken =
+      window.localStorage.getItem('authToken') ?? window.sessionStorage.getItem('authToken') ?? ''
+
+    if (!authToken) {
+      toast({
+        title: 'Authentication required',
+        description: 'Please sign in again to create a shipment.',
+      })
+      router.push('/auth/sign-in')
+      return
+    }
+
+    const ensureIntlPhone = (value: string, defaultPrefix: string) => {
+      const trimmed = value.trim()
+      if (!trimmed) return ''
+      if (trimmed.startsWith('+')) return trimmed
+      if (trimmed.startsWith('0')) {
+        return `${defaultPrefix}${trimmed.slice(1)}`
+      }
+      return `${defaultPrefix}${trimmed}`
+    }
+
+    const toNumber = (value: string) => {
+      const parsed = parseFloat(value)
+      return Number.isFinite(parsed) ? parsed : 0
+    }
+
+    const shippingRateId = shippingSelection.rateId ?? shippingSelection.id
+    const paymentMethodLabel =
+      paymentMethods.find((method) => method.id === payment.method)?.label ?? 'Alcott Wallet'
+
+    const payload: CreateShipmentRequest = {
+      sender_name: sender.name.trim(),
+      sender_phone_number: ensureIntlPhone(sender.phone, '+234'),
+      sender_email: sender.email.trim(),
+      sender_city: sender.city.trim(),
+      sender_address: sender.address.trim(),
+      receiver_name: receiver.name.trim(),
+      receiver_phone_number: ensureIntlPhone(receiver.phone, '+1'),
+      receiver_email: receiver.email.trim(),
+      receiver_city: receiver.city.trim(),
+      receiver_address: receiver.address.trim(),
+      package_category: (pkg.category || 'GENERAL').trim().toUpperCase(),
+      package_weight: toNumber(pkg.weight),
+      package_length: toNumber(pkg.length),
+      package_width: toNumber(pkg.width),
+      package_height: toNumber(pkg.height),
+      shipping_rate_id: shippingRateId,
+      status: 'PENDING',
+      payment_method: paymentMethodLabel,
+    }
+
+    try {
+      setIsSubmitting(true)
+      const response = await createShipment(payload, authToken)
+      toast({
+        title: 'Shipment created',
+        description: 'Your shipment has been created successfully.',
+      })
+      if (response?.data && typeof response.data === 'object') {
+        window.sessionStorage.setItem('lastCreatedShipment', JSON.stringify(response.data))
+      }
+      router.push('/shipment/new/success')
+    } catch (error) {
+      console.error('Failed to create shipment', error)
+      const errorMessage =
+        (error as any)?.response?.data?.message ||
+        (error as any)?.response?.data?.error ||
+        (error as Error).message ||
+        'Unable to create shipment. Please try again.'
+      toast({ title: 'Shipment creation failed', description: errorMessage })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#F8F9FC] flex" style={{ fontFamily: "'Urbanist', sans-serif" }}>
@@ -125,7 +243,7 @@ export default function NewShipmentPage() {
           onCurrencyChange={(value) => setSelectedCurrency(value)}
           searchValue={searchValue}
           onSearchChange={handleSearchChange}
-          onSearchFocus={() => setIsSearchFocused(true)}
+          onSearchFocus={handleSearchFocus}
           searchRef={searchRef}
           isSearchFocused={isSearchFocused}
           recentSearches={recentSearches}
@@ -135,7 +253,7 @@ export default function NewShipmentPage() {
 
         <main className="flex-1 px-4 lg:px-6 py-6 lg:py-8 overflow-y-auto">
           <div className="flex items-center gap-3 mb-6">
-            <button onClick={moveToPrevious} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+            <button onClick={handleBack} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
               <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
@@ -153,10 +271,10 @@ export default function NewShipmentPage() {
 
             <div className="max-w-4xl w-full mx-auto space-y-5 lg:space-y-6">
               {currentStep === 'sender' && (
-                <SenderForm data={sender} onChange={setSender} onContinue={moveToNext} />
+                <SenderForm data={sender} onChange={setSender} onContinue={moveToNext} canContinue={canMoveForward} />
               )}
               {currentStep === 'receiver' && (
-                <ReceiverForm data={receiver} onChange={setReceiver} onContinue={moveToNext} />
+                <ReceiverForm data={receiver} onChange={setReceiver} onContinue={moveToNext} canContinue={canMoveForward} />
               )}
               {currentStep === 'package' && (
                 <PackageForm
@@ -164,10 +282,11 @@ export default function NewShipmentPage() {
                   onChange={setPkg}
                   shippingSelection={shippingSelection}
                   onContinue={moveToNext}
+                  canContinue={canMoveForward}
                 />
               )}
               {currentStep === 'payment' && (
-                <PaymentForm data={payment} onChange={setPayment} onContinue={moveToNext} />
+                <PaymentForm data={payment} onChange={setPayment} onContinue={moveToNext} canContinue={canMoveForward} />
               )}
               {currentStep === 'finish' && (
                 <ReviewSummary
@@ -176,13 +295,7 @@ export default function NewShipmentPage() {
                   pkg={pkg}
                   shippingSelection={shippingSelection}
                   payment={payment}
-                  onConfirm={() => {
-                    setIsSubmitting(true)
-                    setTimeout(() => {
-                      setIsSubmitting(false)
-                      router.push('/shipment/new/success')
-                    }, 1000)
-                  }}
+                  onConfirm={handleConfirmShipment}
                   isSubmitting={isSubmitting}
                 />
               )}
@@ -369,27 +482,16 @@ function MobileBottomNav() {
 /*                               Form Sections                                */
 /* -------------------------------------------------------------------------- */
 
-function FormSection({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
-  return (
-    <div className="space-y-4">
-      <div className="space-y-1">
-        <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-        {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
-      </div>
-      {/* Field stack spacing – tweak here if needed */}
-      <div className="space-y-3">{children}</div>
-    </div>
-  )
-}
-
 function SenderForm({
   data,
   onChange,
   onContinue,
+  canContinue,
 }: {
-  data: typeof initialSender
-  onChange: (value: typeof initialSender) => void
+  data: ShipmentContact
+  onChange: (value: ShipmentContact) => void
   onContinue: () => void
+  canContinue: boolean
 }) {
   return (
     <FormSection title="Sender Details" subtitle="Who is sending this package?">
@@ -398,7 +500,7 @@ function SenderForm({
       <InputRow label="Email" placeholder="Email" type="email" value={data.email} onChange={(value) => onChange({ ...data, email: value })} />
       <InputRow label="City / Province" placeholder="City / Province" value={data.city} onChange={(value) => onChange({ ...data, city: value })} />
       <TextareaRow label="Address Details" placeholder="Address Details" value={data.address} onChange={(value) => onChange({ ...data, address: value })} />
-      <ContinueButton onClick={onContinue} label="Continue" />
+      <ContinueButton onClick={onContinue} label="Continue" disabled={!canContinue} />
     </FormSection>
   )
 }
@@ -407,10 +509,12 @@ function ReceiverForm({
   data,
   onChange,
   onContinue,
+  canContinue,
 }: {
-  data: typeof initialSender
-  onChange: (value: typeof initialSender) => void
+  data: ShipmentContact
+  onChange: (value: ShipmentContact) => void
   onContinue: () => void
+  canContinue: boolean
 }) {
   return (
     <FormSection title="Receiver Details" subtitle="Who will receive this package?">
@@ -419,7 +523,7 @@ function ReceiverForm({
       <InputRow label="Email" placeholder="Email" type="email" value={data.email} onChange={(value) => onChange({ ...data, email: value })} />
       <InputRow label="City / Province" placeholder="City / Province" value={data.city} onChange={(value) => onChange({ ...data, city: value })} />
       <TextareaRow label="Address Details" placeholder="Address Details" value={data.address} onChange={(value) => onChange({ ...data, address: value })} />
-      <ContinueButton onClick={onContinue} label="Continue" />
+      <ContinueButton onClick={onContinue} label="Continue" disabled={!canContinue} />
     </FormSection>
   )
 }
@@ -429,11 +533,13 @@ function PackageForm({
   onChange,
   shippingSelection,
   onContinue,
+  canContinue,
 }: {
-  data: typeof initialPackage
-  onChange: (value: typeof initialPackage) => void
-  shippingSelection: (typeof shippingOptions)[number]
+  data: ShipmentPackage
+  onChange: (value: ShipmentPackage) => void
+  shippingSelection: ShipmentOption
   onContinue: () => void
+  canContinue: boolean
 }) {
   const [showOptions, setShowOptions] = useState(false)
 
@@ -452,13 +558,13 @@ function PackageForm({
         <button
           type="button"
           onClick={() => setShowOptions((prev) => !prev)}
-          className="mt-2 w-full h-12 px-4 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between text-sm text-gray-700 hover:bg-gray-100"
+          className="mt-2 w-full h-11 px-3 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-between text-sm text-gray-700 hover:bg-gray-100"
         >
-          <span className="flex items-center gap-2">
-            <MenuIcon />
+          <span className="flex items-center gap-1.5">
+            <MenuIcon className="w-4 h-4" />
             {shippingSelection ? `${shippingSelection.label} – ₦${shippingSelection.price.toLocaleString()}` : 'Shipping'}
           </span>
-          <CaretDownIcon />
+          <CaretDownIcon className="w-4 h-4" />
         </button>
         {showOptions && (
           <div className="absolute z-10 mt-2 w-full rounded-2xl bg-white shadow-xl border border-gray-100 overflow-hidden">
@@ -483,7 +589,7 @@ function PackageForm({
           </div>
         )}
       </div>
-      <ContinueButton onClick={onContinue} label="Continue" />
+      <ContinueButton onClick={onContinue} label="Continue" disabled={!canContinue} />
     </FormSection>
   )
 }
@@ -492,10 +598,12 @@ function PaymentForm({
   data,
   onChange,
   onContinue,
+  canContinue,
 }: {
-  data: typeof initialPayment
-  onChange: (value: typeof initialPayment) => void
+  data: ShipmentPaymentSelection
+  onChange: (value: ShipmentPaymentSelection) => void
   onContinue: () => void
+  canContinue: boolean
 }) {
   return (
     <FormSection title="Payment Method" subtitle="Select how you want to pay for this shipment.">
@@ -522,7 +630,7 @@ function PaymentForm({
           </label>
         ))}
       </div>
-      <ContinueButton onClick={onContinue} label="Continue" />
+      <ContinueButton onClick={onContinue} label="Continue" disabled={!canContinue} />
     </FormSection>
   )
 }
@@ -536,11 +644,11 @@ function ReviewSummary({
   onConfirm,
   isSubmitting,
 }: {
-  sender: typeof initialSender
-  receiver: typeof initialSender
-  pkg: typeof initialPackage
-  shippingSelection: (typeof shippingOptions)[number]
-  payment: typeof initialPayment
+  sender: ShipmentContact
+  receiver: ShipmentContact
+  pkg: ShipmentPackage
+  shippingSelection: ShipmentOption
+  payment: ShipmentPaymentSelection
   onConfirm: () => void
   isSubmitting: boolean
 }) {
@@ -599,127 +707,6 @@ function SummaryCard({ title, items }: { title: string; items: Array<[string, st
   )
 }
 
-function ContinueButton({ onClick, label }: { onClick: () => void; label: string }) {
-  return (
-    <div className="pt-4">{/* Adjust button offset here */}
-      <Button
-        onClick={onClick}
-        className="w-full h-12 rounded-full bg-[#4043FF] hover:bg-[#3333CC] text-white font-semibold"
-      >
-        {label}
-      </Button>
-    </div>
-  )
-}
-
-function InputRow({
-  label,
-  placeholder,
-  value,
-  onChange,
-  type = 'text',
-  prefix,
-  suffix,
-}: {
-  label: string
-  placeholder: string
-  value: string
-  onChange: (text: string) => void
-  type?: string
-  prefix?: ReactNode
-  suffix?: ReactNode
-}) {
-  return (
-    <div className="space-y-1.5">
-      <label className="text-sm font-semibold text-gray-700">{label}</label>
-      <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 focus-within:bg-white transition-colors">
-        {prefix && (
-          <div className="pl-3 pr-3 flex items-center gap-2 text-sm text-gray-500 border-r border-gray-200">{/* Divider between prefix & input */}
-            {prefix}
-          </div>
-        )}
-        <Input
-          type={type}
-          value={value}
-          placeholder={placeholder}
-          onChange={(e) => onChange(e.target.value)}
-          className="h-12 border-0 bg-transparent focus:ring-0 focus-visible:ring-0 flex-1 px-4"
-        />
-        {suffix && <div className="pr-3 text-sm text-gray-500">{suffix}</div>}
-      </div>
-    </div>
-  )
-}
-
-function TextareaRow({
-  label,
-  placeholder,
-  value,
-  onChange,
-}: {
-  label: string
-  placeholder: string
-  value: string
-  onChange: (text: string) => void
-}) {
-  return (
-    <div className="space-y-1.5">
-      <label className="text-sm font-semibold text-gray-700">{label}</label>
-      <Textarea
-        rows={3}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className="rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-[#4043FF] focus:border-[#4043FF]"
-      />
-    </div>
-  )
-}
-
-function CountryCode({ country = 'NG', flagColor = 'bg-green-500' }: { country?: string; flagColor?: string }) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className={`w-6 h-4 rounded ${flagColor}`} />
-      <span className="text-xs font-semibold text-gray-600">+{country === 'NG' ? '234' : country === 'US' ? '1' : ''}</span>
-    </div>
-  )
-}
-
-function Stepper({ steps: stepConfig, activeIndex }: { steps: StepDefinition; activeIndex: number }) {
-  return (
-    <div className="flex flex-wrap gap-0.5 items-center justify-between">{/* Tweak gap between each step item */}
-      {/* numbers for shipment page */}
-      {stepConfig.map((step, index) => {
-        const isActive = index === activeIndex
-        const isCompleted = index < activeIndex
-        return (
-          <div key={step.key} className="flex items-center gap-1.5 lg:gap-2">{/* Control spacing between circle + connector */}
-            <div className={`flex flex-col items-center text-center transition-all ${isActive ? 'text-[#4043FF]' : 'text-gray-400'}`}>
-              <div
-                className={`w-8 h-8 lg:w-9 lg:h-9 rounded-full flex items-center justify-center text-[11px] lg:text-xs font-bold border-2 ${
-                  isActive
-                    ? 'border-[#4043FF] text-white bg-[#4043FF]'
-                    : isCompleted
-                      ? 'border-[#4043FF] text-[#4043FF]'
-                      : 'border-gray-300'
-                }`}
-              >
-                {index + 1}
-              </div>
-              <span className="mt-1 text-[10px] lg:text-[11px] font-semibold uppercase tracking-wide">{step.label}</span>
-            </div>
-            {index < stepConfig.length - 1 && (
-              <div
-                className={`w-6 lg:w-8 h-0.5 ${index < activeIndex ? 'bg-[#4043FF]' : 'bg-gray-200'}`}
-              />
-            )}
-            {/* Adjust line length */}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
 
 function SidebarLink({
   href,
